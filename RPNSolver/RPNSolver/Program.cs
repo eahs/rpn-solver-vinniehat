@@ -13,9 +13,6 @@ namespace RPNSolver
         {
             ExpressionService = new ExpressionService();
 
-            // Todo: Delete this line once you understand stacks
-            ShowHowStacksWork();
-
             while (true)
             {
                 DisplayMenu();
@@ -35,47 +32,6 @@ namespace RPNSolver
                         break;
                 }
             }
-        }
-        
-        /// <summary>
-        /// Learn about how stacks work.. then delete me
-        /// </summary>
-        private static void ShowHowStacksWork()
-        {
-            // Use whatever you need from below...
-            Stack st = new Stack();
-            
-            st.Push('A');
-            st.Push('M');
-            st.Push('G');
-            st.Push('W');
-            
-            Console.WriteLine("Current stack: ");
-            foreach (char c in st) {
-                Console.Write(c + " ");
-            }
-            Console.WriteLine();
-            
-            st.Push('V');
-            st.Push('H');
-            Console.WriteLine("The next poppable value in stack: {0}", st.Peek());
-            Console.WriteLine("Current stack: ");
-            
-            foreach (char c in st) {
-                Console.Write(c + " ");
-            }
-            
-            Console.WriteLine();
-            
-            Console.WriteLine("Removing values ");
-            st.Pop();
-            st.Pop();
-            st.Pop();
-            
-            Console.WriteLine("Current stack: ");
-            foreach (char c in st) {
-                Console.Write(c + " ");
-            }            
         }
 
         /// <summary>
@@ -110,7 +66,7 @@ namespace RPNSolver
         /// <summary>
         /// Asks the user to input a prefix expression and then converts it to postfix and then evaluates it.
         /// </summary>
-        private static void ConvertInfix ()
+        private static void ConvertInfix () // English Notation -> Reverse Polish Notation
         {
             Console.Write("Enter an infix expression: ");
             string expression = Console.ReadLine();
@@ -122,7 +78,7 @@ namespace RPNSolver
             Console.WriteLine($"Solution: {solution}\n");             
         }
 
-        private static void EvaluatePostfix()
+        private static void EvaluatePostfix() // Reverse Polish Notation -> Answer
         {
             Console.Write("Enter a postfix expression: ");
             string expression = Console.ReadLine();
