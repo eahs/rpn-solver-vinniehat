@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace RPNSolver.Services
 {
@@ -11,41 +13,39 @@ namespace RPNSolver.Services
         /// </summary>
         /// <param name="expression"></param>
         /// <returns></returns>
-        public string ConvertInfixToPostfix(string expression) // Example: +34
+        public string ConvertInfixToPostfix(string expression) // Example: 3+4 = +34
         {
-            char[] characters = expression.ToCharArray();
-            Stack<char> numbers = new Stack<char>();
-            Dictionary<int, char> operators = new Dictionary<int, char>(); // index, operator
+            string[] characters = expression.Select(x => x.ToString()).ToArray();
+            List<string> output = new List<string>();
+            Stack<string> stack = new Stack<string>();
 
-            for (int i = 0; i < characters.Length; i++)
+            foreach (var character in characters)
             {
-                if (OPERATORS.Contains(characters[i])) operators.Add(i, characters[i]);
-                if (Char.IsNumber(characters[i])) numbers.Push(characters[i]);
+                stack.Push(character);
             }
 
-            while (numbers.Count != 0)
+            foreach (var token in characters)
             {
-                for (int i = -2; i < numbers.Count;)
+                if (OPERATORS.Contains(stack.Peek())) output.Add(stack.Pop());
+                else if (token == ")") // This is done because it is prioritized
                 {
-                    int n1 = 0;
-                    int n2 = 0;
-                    if (numbers.Count > i + 2)
-                    {
-                        i += 2;
-                    }
+                    while(stack.Count != 0 && stack.Peek() != "(") output.Add(stack.Pop());
 
-                    n2 = numbers.Pop();
-                    n1 = numbers.Pop();
-                    
-                    if(operators[i].ToString() == "+") numbers.Push(Convert.ToChar(n2+n1));
-                    if(operators[i].ToString() == "-") numbers.Push(Convert.ToChar(n2-n1));
-                    if(operators[i].ToString() == "*") numbers.Push(Convert.ToChar(n2*n1));
-                    if(operators[i].ToString() == "/") numbers.Push(Convert.ToChar(n2/n1));
+                    stack.Pop(); // Now after the while loop is done, we can REMOVE the "("
 
                 }
+                else
+                {
+                    if (stack.Count == 0 || Precedence(token) < Precedence(stack.Peek()) || token == "(")
+                        stack.Push(token);
+                }
+
+
             }
 
-            return "idkwtfbbq";
+            while(stack.Count != 0) output.Add(stack.Pop());
+            
+            return output.Aggregate("", (current, s) => current + s);
         }
 
         /// <summary>
@@ -56,6 +56,21 @@ namespace RPNSolver.Services
         public int EvaluatePostfix(string expression)
         {
             return 0;
+        }
+
+        public int Precedence(string op)
+        {
+            switch (op)
+            {
+                case "*":
+                case "/":
+                    return 2;
+                case "+":
+                case "-":
+                    return 1;
+                default:
+                    return 0;
+            }
         }
     }
 }
