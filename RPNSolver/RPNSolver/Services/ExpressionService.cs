@@ -51,8 +51,26 @@ namespace RPNSolver.Services
         /// <returns></returns>
         public int EvaluatePostfix(string expression)
         {
-            return 0;
+            string[] characters = expression.Select(x => x.ToString()).ToArray();
+            Stack<string> stack = new Stack<string>();
+
+            foreach (var character in characters)
+            {
+                if (int.TryParse(character, out _)) stack.Push(character);
+                else if (OPERATORS.Contains(character))
+                {
+                    int n1 = int.Parse(stack.Pop());
+                    int n2 = int.Parse(stack.Pop());
+                    if(character == "+") stack.Push((n2 + n1).ToString());
+                    if(character == "-") stack.Push((n2 - n1).ToString());
+                    if(character == "/") stack.Push((n2 / n1).ToString());
+                    if(character == "*") stack.Push((n2 * n1).ToString());
+                }
+            }
+
+            return int.Parse(stack.Peek());
         }
+        
 
         public int Precedence(string op)
         {
