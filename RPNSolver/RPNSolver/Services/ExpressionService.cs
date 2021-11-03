@@ -18,15 +18,11 @@ namespace RPNSolver.Services
             string[] characters = expression.Select(x => x.ToString()).ToArray();
             List<string> output = new List<string>();
             Stack<string> stack = new Stack<string>();
-
-            foreach (var character in characters)
-            {
-                stack.Push(character);
-            }
+            
 
             foreach (var token in characters)
             {
-                if (OPERATORS.Contains(stack.Peek())) output.Add(stack.Pop());
+                if (int.TryParse(token, out _)) output.Add(token);
                 else if (token == ")") // This is done because it is prioritized
                 {
                     while(stack.Count != 0 && stack.Peek() != "(") output.Add(stack.Pop());
@@ -69,7 +65,7 @@ namespace RPNSolver.Services
                 case "-":
                     return 1;
                 default:
-                    return 0;
+                    return 3;
             }
         }
     }
